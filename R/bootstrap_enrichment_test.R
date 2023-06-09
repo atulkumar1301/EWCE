@@ -208,8 +208,10 @@ bootstrap_enrichment_test <- function(sct_data = NULL,
 
     lvls <- get_ctd_levels(ctd = sct_data)
     numLevels <- length(lvls)
+    filtered_genes <- list()  # Empty list to store filtered genes
     for (lv in seq_len(numLevels)) {
         gN <- rownames(sct_data[[lv]]$mean_exp)
+        filtered_genes[[lv]] <- gN[!gN %in% combinedGenes]  # Store filtered genes for each level
         sct_data[[lv]]$mean_exp <-
             sct_data[[lv]]$mean_exp[gN %in% combinedGenes, ]
         sct_data[[lv]]$specificity <-
@@ -307,7 +309,7 @@ bootstrap_enrichment_test <- function(sct_data = NULL,
         results = results,
         hit.cells = hit.cells,
         gene_data = gene_data,
-        bootstrap_data = bootstrap_data
+        bootstrap_data = bootstrap_data, filtered_genes = filtered_genes) #Inculde filetred genes in the output
     )
     return(full_results)
 }
